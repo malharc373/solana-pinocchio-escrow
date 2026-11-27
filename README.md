@@ -1,5 +1,7 @@
 # Pinocchio token escrow
 
+[![CI](https://github.com/malharc373/solana-pinocchio-escrow/actions/workflows/ci.yml/badge.svg)](https://github.com/malharc373/solana-pinocchio-escrow/actions/workflows/ci.yml)
+
 A Pinocchio 0.12 port of [solana-escrow](https://github.com/malharc373/solana-escrow). A maker deposits token A into a PDA-owned vault and sets a price in token B. A taker pays that price and receives the vault balance atomically, or the maker refunds the offer. Both settlement paths close the vault and the escrow state and return their lamports to the maker.
 
 ## Build and test
