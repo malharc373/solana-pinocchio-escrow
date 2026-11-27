@@ -579,3 +579,18 @@ fn compare_compute_units() {
         PINOCCHIO_SO.len()
     );
 }
+
+/// Pinocchio's compute units from fixed keys and seeds, for the check that runs
+/// on pull requests (solana-cu-guard). Same flow as the benchmark, one sample.
+#[test]
+fn cu_report() {
+    let mut report = cu_report::Report::new();
+    for (token, label) in TOKEN_PROGRAMS.into_iter().zip(["token", "token-2022"]) {
+        let (units, _) = measure(token, PINOCCHIO_SO, 0);
+        for (instruction, cu) in ["make", "take", "refund"].into_iter().zip(units) {
+            report.record(format!("{instruction} ({label})"), cu);
+        }
+    }
+    let path = report.write(cu_report::default_path!()).unwrap();
+    println!("{}:\n{}", path.display(), report.to_json());
+}
