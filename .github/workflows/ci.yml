@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  SOLANA_VERSION: v3.1.10
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/solana
+            ~/.local/share/solana
+            target
+          key: ${{ runner.os }}-${{ env.SOLANA_VERSION }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Install Solana CLI
+        run: |
+          [ -x "$HOME/.local/share/solana/install/active_release/bin/solana" ] ||
+            sh -c "$(curl -sSfL https://release.anza.xyz/${SOLANA_VERSION}/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+
+      - run: cargo fmt --check
+      - run: cargo build-sbf -- --locked
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo test --locked --test escrow -- --nocapture

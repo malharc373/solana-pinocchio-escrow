@@ -1,0 +1,8 @@
+/target
+.DS_Store
+node_modules
+# keypairs and secrets
+*keypair*.json
+id.json
+.env
+.env.*

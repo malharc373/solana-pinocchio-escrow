@@ -1,0 +1,36 @@
+[package]
+name = "pinocchio-escrow"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+description = "Token and Token-2022 escrow in Pinocchio, with an Anchor compute-unit comparison"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []
+
+[dependencies]
+pinocchio = { version = "0.12", features = ["cpi"] }
+pinocchio-system = "0.7.1"
+solana-address = { version = "2", features = ["decode"] }
+
+[dev-dependencies]
+anchor-lang = "1.1.2"
+anchor-spl = "1.1.2"
+litesvm = "0.10.0"
+solana-keypair = "3.0.1"
+solana-message = "3.0.1"
+solana-rent = "3"
+solana-signer = "3.0.0"
+solana-transaction = "3.0.2"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
